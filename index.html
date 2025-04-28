@@ -19,7 +19,7 @@
       text-align: center;
     }
     .overlay {
-      background: rgba(255, 255, 255, 0.8);
+      background: rgba(255, 255, 255, 0.85);
       padding: 60px 30px;
       border-radius: 15px;
       max-width: 600px;
@@ -37,19 +37,43 @@
       margin-bottom: 20px;
       color: #555;
     }
-    a.button {
-      display: inline-block;
-      padding: 12px 30px;
-      background: #00a8e8;
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 20px;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 12px 15px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1em;
+      font-family: 'Nunito', sans-serif;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 150px;
+    }
+    button {
+      background-color: #00a8e8;
       color: white;
+      padding: 14px 25px;
+      border: none;
       border-radius: 30px;
-      text-decoration: none;
       font-weight: bold;
       font-size: 1.1em;
+      cursor: pointer;
       transition: background 0.3s ease;
     }
-    a.button:hover {
-      background: #0077b6;
+    button:hover {
+      background-color: #0077b6;
+    }
+    #thank-you {
+      display: none;
+      margin-top: 15px;
+      color: green;
+      font-weight: bold;
     }
     footer {
       margin-top: 30px;
@@ -66,10 +90,39 @@
   <div class="overlay">
     <h1>Liam Hetherington</h1>
     <p>Welcome to my personal website. Feel free to get in touch!</p>
-    <a class="button" href="mailto:enquiries@liamhetherington.co.uk">Contact Me</a>
+    <form id="contact-form" action="https://formspree.io/f/mnndnenq" method="POST">
+      <input type="text" name="name" placeholder="Your Name" required>
+      <input type="email" name="email" placeholder="Your Email" required>
+      <textarea name="message" placeholder="Your Message" required></textarea>
+      <button type="submit">Send Message</button>
+      <p id="thank-you">Thank you for your message!</p>
+    </form>
     <footer>
       &copy; 2025 Liam Hetherington
     </footer>
   </div>
+
+  <script>
+    const form = document.getElementById('contact-form');
+    const thankYou = document.getElementById('thank-you');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const response = await fetch(form.action, {
+        method: form.method,
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+      if (response.ok) {
+        form.reset();
+        thankYou.style.display = 'block';
+      } else {
+        alert('There was a problem sending your message. Please try again.');
+      }
+    });
+  </script>
 </body>
 </html>
